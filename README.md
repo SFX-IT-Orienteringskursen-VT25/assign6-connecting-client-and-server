@@ -1,6 +1,6 @@
 # assign6-connecting-client-and-server
 The assignment was introduced in Class #11. In the link you can find the slides from the presentation as well as a recording of the class.
-`<link will be added after the class has been held>`
+https://classroom.google.com/c/MjI5OTg3MzMwODFa/p/MjM2ODAyODM3MTNa/details
 
 Example of CORS configuration
 ```
