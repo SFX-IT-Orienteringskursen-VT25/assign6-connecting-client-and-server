@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Numbers Summator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .history { margin-top: 10px; }
+    .history li { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <h1>Summator</h1>
+  <div>
+    <input id="numInput" type="number" placeholder="Введите число" />
+    <button id="addBtn">Добавить</button>
+    <button id="clearBtn">Очистить</button>
+  </div>
+  <h3>Сумма: <span id="sum">0</span></h3>
+  <ul id="history" class="history"></ul>
+
+  <script>
+    const API_BASE = 'http://localhost:5262'; // поменяй на порт твоего сервера
+
+    async function getNumbers() {
+      const res = await fetch(API_BASE + '/number');
+      if (!res.ok) throw new Error('Ошибка при получении чисел');
+      return res.json();
+    }
+
+    async function addNumber(value) {
+      const res = await fetch(API_BASE + '/number', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ value: Number(value), createdAt: new Date().toISOString() })
+      });
+      if (!res.ok) throw new Error('Ошибка при сохранении числа');
+      return res.json();
+    }
+
+    async function clearNumbers() {
+      const res = await fetch(API_BASE + '/number', { method: 'DELETE' });
+      if (!res.ok && res.status !== 204) throw new Error('Ошибка при очистке');
+      return;
+    }
+
+    function render(list) {
+      const history = document.getElementById('history');
+      const sumEl = document.getElementById('sum');
+      history.innerHTML = '';
+      let sum = 0;
+      list.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item.value + '  (' + new Date(item.createdAt).toLocaleString() + ')';
+        history.appendChild(li);
+        sum += Number(item.value);
+      });
+      sumEl.textContent = sum;
+    }
+
+    document.getElementById('addBtn').addEventListener('click', async () => {
+      const input = document.getElementById('numInput');
+      const val = input.value;
+      if (val === '') return alert('Введите число');
+      try {
+        await addNumber(val);
+        input.value = '';
+        const list = await getNumbers();
+        render(list);
+      } catch (e) { alert(e.message); console.error(e); }
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', async () => {
+      if (!confirm('Очистить все числа?')) return;
+      try {
+        await clearNumbers();
+        render([]);
+      } catch (e) { alert(e.message); console.error(e); }
+    });
+
+    // при загрузке страницы
+    (async function init() {
+      try {
+        const list = await getNumbers();
+        render(list);
+      } catch (e) {
+        console.error(e);
+        // можно показать сообщение пользователю
+      }
+    })();
+  </script>
+</body>
+</html>
