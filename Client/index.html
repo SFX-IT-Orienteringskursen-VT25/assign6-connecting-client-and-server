@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add and Summarize Numbers</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Add a Number and Summarize Them</h1>
+        <p>Enter a number below. The calculator will correctly summarize the numbers.</p>
+        <p><strong>Bonus improvement:</strong> Prevents adding invalid inputs.</p>
+        <!-- Only allow number with type `number` or alternative to use pattern attribute -->
+        <input id="numberInput" type="number" min="0" placeholder="Enter an integer" />
+        <button id="addButton">Add Number</button>
+        <button id="removeButton">Remove Numbers</button>
+        <div class="list">
+            <div id="numberList"></div>
+            =
+            <h3><span id="totalSum">0</span></h3>
+        </div>
+    </div>
+
+    <script async type="module">
+        import Operation from "./operation-service.js";
+
+        const numberInput = document.getElementById('numberInput');
+        const addButton = document.getElementById('addButton');
+        const removeButton = document.getElementById('removeButton');
+        const numberList = document.getElementById('numberList');
+        const totalSum = document.getElementById('totalSum');
+
+        const operationService = new Operation();
+
+        const clearInput = () => {
+            numberInput.value = '';
+            numberInput.focus();
+        }
+
+        const addNumber = async () => {
+            await operationService.getNumbers()
+            .then(numbers => {
+                numbers.push(parseInt(numberInput.value.trim()));
+                operationService.setNumbers(numbers);
+            });
+        }
+
+        const printTotal = async () => {
+            await operationService.getNumbers()
+            .then(numbers => {
+                numberList.textContent = numbers.join(' + ') || "No numbers yet";
+                totalSum.textContent = operationService.calculateSum(numbers);
+            });
+        }
+
+        addButton.addEventListener('click', async () =>  {
+            await addNumber();
+            await printTotal();
+            await clearInput();
+        });
+
+        removeButton.addEventListener('click', async () => {
+            await operationService.removeNumbers();
+            await printTotal();
+        });
+
+        window.onload = async () => await printTotal();
+
+    </script>
+</body>
+
+</html>

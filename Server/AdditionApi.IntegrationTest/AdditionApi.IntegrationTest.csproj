@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
+        <TargetFramework>net10.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="*" />
+        <PackageReference Include="FluentAssertions" Version="*" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="*" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="*" />
+        <PackageReference Include="Testcontainers.MsSql" Version="*" />
+        <PackageReference Include="xunit" Version="*" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AdditionApi\AdditionApi.csproj" />
+    </ItemGroup>
+
+</Project>

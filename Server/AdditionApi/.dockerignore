@@ -1,0 +1,13 @@
+bin/
+obj/
+.git/
+.gitignore
+README.md
+Dockerfile
+.dockerignore
+**/.vs/
+**/.vscode/
+**/node_modules/
+**/npm-debug.log
+**/Thumbs.db
+**/.DS_Store
