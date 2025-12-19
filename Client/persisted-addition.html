@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addition App (Final + Bonus)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        input {
+            padding: 0.5rem;
+            width: 100px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-clear {
+            background-color: #dc3545;
+        }
+
+        .list {
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+
+        .item {
+            padding: 5px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Addition Calculator</h1>
+
+    <input type="number" id="numA" placeholder="Number A">
+    <span>+</span>
+    <input type="number" id="numB" placeholder="Number B">
+    
+    <button onclick="calculate()">Calculate</button>
+    
+    <button onclick="clearData()" class="btn-clear">Clear History</button>
+
+    <div class="list">
+        <h3>History</h3>
+        <div id="resultList">Loading...</div>
+    </div>
+
+    <script>
+        window.onload = async function() {
+            await loadHistory();
+        };
+
+        async function loadHistory() {
+            try {
+                const response = await fetch('http://localhost:5200/api/Addition');
+                if (!response.ok) {
+                    document.getElementById('resultList').innerText = 'Backend not running or wrong port.';
+                    return;
+                }
+                const data = await response.json();
+                
+                const listDiv = document.getElementById('resultList');
+                listDiv.innerHTML = '';
+
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'item';
+                    div.textContent = item.operation; 
+                    listDiv.appendChild(div);
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('resultList').innerText = 'Error connecting to server!';
+            }
+        }
+
+        async function calculate() {
+            const a = document.getElementById('numA').value;
+            const b = document.getElementById('numB').value;
+
+            if (!a || !b) {
+                alert("Please enter both numbers");
+                return;
+            }
+
+            const calculation = {
+                Operand1: parseInt(a),
+                Operand2: parseInt(b)
+            };
+
+            try {
+                await fetch('http://localhost:5200/api/Addition', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(calculation)
+                });
+
+                await loadHistory();
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Failed to calculate. Is the server running?");
+            }
+        }
+
+
+        async function clearData() {
+            if(!confirm("Are you sure you want to delete all history?")) {
+                return; 
+            }
+
+            try {
+                await fetch('http://localhost:5200/api/Addition', {
+                    method: 'DELETE'
+                });
+
+                await loadHistory();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert("Failed to clear data.");
+            }
+        }
+    </script>
+</body>
+</html>
