@@ -15,6 +15,7 @@
 
         <input type="text" id="numberInput" placeholder="Enter an integer">
         <button id="addButton">Add Number</button>
+        <button id="clearButton">Clear All</button>
 
         <div class="list">
             <div id="numberList"></div>
@@ -29,6 +30,8 @@
         const addButton = document.getElementById('addButton');
         const numberList = document.getElementById('numberList');
         const totalSum = document.getElementById('totalSum');
+        const clearButton = document.getElementById('clearButton');
+
 
         const numberService = new NumberService("http://localhost:5247");
 
@@ -71,6 +74,20 @@
             numberInput.value = '';
             numberInput.focus();
         });
+
+
+        clearButton.addEventListener('click', async () =>
+        {
+            try
+            {
+                await numberService.clearAll();
+                await render();
+            } catch (err)
+            {
+                alert(err.message);
+            }
+        });
+
     </script>
 </body>
 

@@ -36,4 +36,15 @@ export class NumberService {
         const numbers = await this.getNumbers();
         return numbers.reduce((a, b) => a + b, 0);
     }
+    
+    async clearAll() {
+    const res = await fetch(`${this.baseUrl}/items`, {
+        method: "DELETE"
+    });
+
+    if (!res.ok && res.status !== 204) {
+        throw new Error("Failed to clear items");
+    }
+}
+
 }
