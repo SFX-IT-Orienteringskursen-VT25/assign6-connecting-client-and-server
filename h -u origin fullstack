@@ -1,0 +1,17 @@
+[33mcommit ca1d776205f586d1bc87ae3faa633f84141d1b5f[m[33m ([m[1;36mHEAD -> [m[1;32mfullstack[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: Linus Lindgren <linus.lindgren@utb.tyreso.se>
+Date:   Tue Dec 2 22:51:59 2025 +0100
+
+    Update README.md
+
+[33mcommit 625109a15b704b7568e19fac156d18a0672cd838[m
+Author: Linus Lindgren <linus.lindgren@utb.tyreso.se>
+Date:   Mon Dec 1 20:52:08 2025 +0100
+
+    Update README.md
+
+[33mcommit 4a69dce3c43d60477d64a4a1cd543a1ad1a25d2c[m
+Author: Linus Lindgren <linus.lindgren@utb.tyreso.se>
+Date:   Mon Dec 1 20:51:17 2025 +0100
+
+    add ReadMe with instructions

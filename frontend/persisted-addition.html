@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add and Summarize Numbers</title>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Add a Number and Summarize Them</h1>
+        <p>Enter a number below. The calculator will correctly summarize the numbers.</p>
+        <p><strong>Bonus improvement:</strong> Prevents adding invalid inputs.</p>
+
+        <input type="text" id="numberInput" placeholder="Enter an integer">
+        <button id="addButton">Add Number</button>
+
+        <div class="list">
+            <div id="numberList"></div>
+            =
+            <h3><span id="totalSum">0</span></h3>
+        </div>
+    </div>
+
+    <script type="module">
+        import { NumberService } from './numberService.js';
+        const numberInput = document.getElementById('numberInput');
+        const addButton = document.getElementById('addButton');
+        const numberList = document.getElementById('numberList');
+        const totalSum = document.getElementById('totalSum');
+
+        const numberService = new NumberService("http://localhost:5247");
+
+        async function render()
+        {
+            const numbers = await numberService.getNumbers();
+            const sum = await numberService.getSum();
+            numberList.textContent = numbers.join(' + ');
+            totalSum.textContent = sum;
+
+        }
+
+        render()
+        let enteredNumbers = [];
+        let sum = 0;
+
+        addButton.addEventListener('click', async function ()
+        {
+            const number = numberInput.value.trim();
+
+            // Check if input is a valid integer (no decimals, no empty input)
+            if (!/^-?\d+$/.test(number))
+            {
+                alert('Please enter a valid integer.');
+                return;
+            }
+
+            const numValue = parseInt(number, 10);
+            try
+            {
+                await numberService.addNumber(numValue);
+                await render();
+            }
+            catch (err)
+            {
+                alert(err.message);
+            }
+
+
+            numberInput.value = '';
+            numberInput.focus();
+        });
+    </script>
+</body>
+
+</html>
