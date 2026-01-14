@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Addition Client</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .container { background: #fdfdfd; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        input { padding: 8px; flex-grow: 1; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result-group { margin-top: 20px; border-top: 2px solid #eee; padding-top: 10px; }
+        .total { font-size: 1.25rem; font-weight: bold; color: #28a745; }
+        ul { list-style-type: none; padding: 0; }
+        li { padding: 5px 0; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Number Summarizer</h1>
+        
+        <div class="input-group">
+            <input type="number" id="numberInput" placeholder="Enter a number">
+            <button onclick="addNumber()">Add</button>
+        </div>
+
+        <div class="result-group">
+            <p>Total: <span id="totalDisplay" class="total">0</span></p>
+            <h3>History:</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </div>
+
+    <script src="client.js"></script>
+</body>
+</html>
