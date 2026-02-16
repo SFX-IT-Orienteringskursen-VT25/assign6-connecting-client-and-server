@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" name="referrer">
+    <title>Add and Summarize Numbers</title>
+</head>
+<body>
+    <div style="font-family:sans-serif; color: gray; text-align: justify;">
+        <h1>Add a Number and Summarize Them</h1>
+        <p>Enter a number below. The calculator will correctly summarize the numbers.</p>
+        <p><strong>Bonus improvement:</strong> Prevents adding invalid inputs.</p>
+
+
+        <div style="display: flex; gap:1rem; padding:1rem; flex-flow: row wrap; background-color: papayawhip; height: fit-content; width: 40rem; justify-content: space-between;">
+            <h2 style="font-size: 1.8rem; text-align:center; width: 100%; color: orange;">Summarize Calculator</h2>
+            <input style="border: transparent; border-radius: 20px; padding: 1rem; width: 60%; font-size: medium; color: gray; "type="text" id="numberInput" placeholder="Enter an integer">
+            <button style="background-color: orange; color:white; padding: 1.2rem; width: 30%; border-radius: 20px; font-weight: bold; border: none; font-size: medium;" id="addNumber">Add Number</button>
+
+            <div style="display: flex; align-items: baseline; flex-flow: row nowrap; justify-content: space-between; width: 100%;">
+                <h3 style="font-size: 1.2rem;">Total summarize: </h3>             
+                <h3 style="font-size: 1.2rem;  justify-content: flex-end;  color: gray; text-align: end; width: 60%; text-wrap-style: stable;"  id="totalSum"></h3>
+
+            </div>
+            <hr style="border-top: 1px solid orange; width: 100%; margin: 10px auto;">   
+            <div style="display: flex; align-items: baseline; flex-flow: column wrap; justify-content: space-between; width: 100%;">
+                <h3>All numbers added: </h3>             
+                <ul style="display: flex; gap: 1.2rem; flex-flow: row wrap; list-style: none; font-size: 1rem; padding: 0.5rem;" id="lastSum"></ul>
+            </div>
+            <button style="background-color: orange; color:white; padding: 1.2rem; width: 30%; border-radius: 20px; font-weight: bold; border: none; font-size: medium;" id="cleanDb">Clean all numbers</button>
+
+        </div>
+    </div>
+
+    <script>
+        const numberInput = document.getElementById('numberInput');
+        const showNumbers = document.getElementById('showNumbers');
+        const numberList = document.getElementById('numberList');
+
+
+        const BASE_URL = "http://127.0.0.1:5262/";
+
+        async function getAllValues() {
+            const res = await fetch(BASE_URL + 'api/addition/', {
+                method: 'GET'});
+                
+                if (!res) { throw new Error("Failed get data")};
+                
+                return res.json();
+        }
+
+        async function addValue(value) {
+            const res = await fetch(BASE_URL + 'api/addition/', 
+                {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ key: value, value: new Date() })         
+                }
+            );
+
+            if (!res.ok) { alert("Something wrong added this number") };
+
+            return res.json();
+        }
+
+        async function cleanAllValues() {
+            const res = await fetch(BASE_URL + 'api/addition/',{ method: "DELETE" });
+            if (!res.ok) { 
+                alert("Nothing to clean") 
+                return false 
+            };
+
+            return true;   
+        }
+
+        function parseInteger(a){
+            if (typeof a !== "number") {
+                a = parseInt(a, 10); 
+                return  a;
+            } return a
+        }
+
+        function sumElements(a) {
+            let count =+ parseInteger(a);
+            return  count;
+        }
+
+        function wrapperUI(numberList) {
+            const lastSum = document.getElementById('lastSum');
+            const totalSum = document.getElementById('totalSum');
+
+            lastSum.textContent = "";
+            let sum = 0;
+
+            const sortedNumbers = numberList.sort((a, b) => new Date(a.value) - new Date(b.value));
+
+            sortedNumbers.forEach(element => {
+
+                const li = document.createElement("li");
+                li.textContent = element.key;
+                li.ariaHidden = element.value;
+
+                lastSum.appendChild(li);
+
+                sum += sumElements(element.key);
+            });         
+            
+            totalSum.textContent = sum;
+        }
+    
+        document.getElementById("addNumber").addEventListener('click', async () => {
+            const input = numberInput.value.trim();
+
+            if (!/^-?\d+$/.test(input)) { 
+                alert('Please enter a valid integer.');
+                return;
+            }
+
+            try {
+                await addValue(input);
+                input.value = "";
+                const allValues = await getAllValues();
+                wrapperUI(allValues);
+            } catch (error) {
+                console.error("Add Number failed: ", {error})
+            }
+
+        });
+
+        document.getElementById("cleanDb").addEventListener('click', async () => {
+            try {
+                const success = await cleanAllValues();
+        
+                if (success) {
+                    numberInput.value = "";
+
+                    const lastSum = document.getElementById('lastSum');
+                    const totalSum = document.getElementById('totalSum');
+                    
+                    lastSum.innerHTML = ""; 
+                    totalSum.textContent = "0";
+
+                    console.log("Database and UI cleared successfully.");
+                }
+            } catch (error) {
+                console.error("Delete failed:", error)
+            }
+        });
+
+
+        (async function start() {
+            try {
+                const arr = await getAllValues();
+                wrapperUI(arr);
+            } catch (error) {
+                console.log("Start failed:", error)
+            }
+        })();
+
+    </script>
+</body>
+</html>
