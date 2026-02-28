@@ -1,52 +1,26 @@
-# assign6-connecting-client-and-server
-The assignment was introduced in Class #11. In the link you can find the slides from the presentation as well as a recording of the class.
-https://classroom.google.com/c/MjI5OTg3MzMwODFa/p/MjM2ODAyODM3MTNa/details
+# assign4-adding-database
+The assignment was introduced in Class #8. In the link you can find the slides from the presentation as well as a recording of the class.
+https://classroom.google.com/c/MjI5OTg3MzMwODFa/p/MjM0NjU0MTY0MTVa/details
 
-Example of CORS configuration
-```
-var builder = WebApplication.CreateBuilder(args);
+Class #9 contains my aggregated feedback on your first attempts at the assignment.
+https://classroom.google.com/c/MjI5OTg3MzMwODFa/p/ODA3MDA5NDI3MjE5/details
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins("http://localhost:5500")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
-    });
-});
+This simple example shows you how to setup MS SQL server in Docker from your application code
+https://github.com/SFX-IT-Orienteringskursen-VT25/setup-mssql-with-docker-example
 
-var app = builder.Build();
-
-app.UseCors();
-```
-
-Example of javascript to call a server
-```
-async getNumbers() {
-  const response = await fetch('http://localhost:5262/number', { method: 'GET' });
-  if (!response.ok) throw new Error(`Failed to fetch numbers (${response.status})`);
-  
-  const data = await response.json();
-  return data;
-}
-```
 ## Instructions
-Don't start this assignment until you have finshed assignment 5!
+Don't start this assignment until you have finshed assignment 3!
 
 Clone this repository
 
-Reuse your client from assignment 3 and your server from assignment 5.
+Reuse your application from assignment 3.
 
 Create a branch
 
 Requirements:
-- The web client should allow the user to summarize numbers
-  - each entered number should be added to the sum
-  - all entered numbers should be visible for the user (history)
-  - the numbers should be persisted upon page load and stored in a database
-  - (optional) Bonus points if you have a feature that allows the user to clear the numbers
-- The web client should communicate with the database via a web API  (server)
+- The Api should use MS SQL as the persistence layer
+- The MS SQL server should be hosted in Docker
+- The methods for saving and retrieving data should be done towards the MS SQL database
 
 Commit
 
