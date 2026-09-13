@@ -1,0 +1,67 @@
+**/.env
+# App
+.app/
+artifacts/
+dist/
+debug/
+**/tests/currents/**
+**/tests/diffs/**
+node_modules
+node_modules/
+data-mongo
+build-info
+**/__diff_output__/**
+**/.angular/*
+
+# CI / CD
+!.github/actions/**/dist
+
+# IDEs & Editors
+.idea
+.project
+.classpath
+.eslintcache
+.c9/
+.nyc_output
+*.launch
+.settings/
+*.sublime-workspace
+.history/
+
+# IDE - VSCode
+.vscode/*
+!.vscode/launch.json
+!.vscode/tasks.json
+**/.vs/*
+
+# Miscellanous
+/connect.lock
+/coverage
+npm-debug.log
+emulator
+/docker-compose.override.yml
+
+# System Files
+.DS_Store
+Thumbs.db
+/.vs
+/traefik/access.log
+
+
+# Pact
+pact/pacts/myconsumer-myprovider.json
+pact/logs/MyConsumer-MyProvider-mockserver-interaction.log
+
+# Cypress
+/apps/studio-e2e/src/downloads
+/apps/studio-e2e/cypress/downloads
+/apps/studio-e2e/src/screenshots
+/apps/studio-e2e/src/videos
+/apps/studio-e2e/**/__diff_output__/*.png
+
+.angular
+.npmrc
+
+# NX
+.nx/cache
+.nx/workspace-data
