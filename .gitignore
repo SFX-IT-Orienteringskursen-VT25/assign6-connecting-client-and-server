@@ -130,3 +130,9 @@ Thumbs.db
 /.vs
 
 .npmrc
+
+
+# SQLite database files
+Server/AdditionApi/*.db
+Server/AdditionApi/*.db-shm
+Server/AdditionApi/*.db-wal
