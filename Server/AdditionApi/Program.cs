@@ -1,43 +1,72 @@
+
+
 using AdditionApi;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddControllers();
-
-// CORS: разрешаем клиенту (пример: http://localhost:5500)
+builder.Services.AddOpenApi();
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:5500", "http://127.0.0.1:5500")
+        policy.WithOrigins("http://localhost:5500")
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
 });
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlite("Data Source=additionapi.db"));
 
 var app = builder.Build();
 
+// Create the database and its tables if they do not exist.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
+    db.Database.EnsureCreated();
+}
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
 }
 
 app.UseCors();
+app.UseHttpsRedirection();
 
-app.MapControllers();
+app.MapPost("/storage", async (StorageItem item, AppDbContext db) =>
+{
+    var existingItem = await db.StorageItems
+        .FirstOrDefaultAsync(x => x.Key == item.Key);
 
-app.MapGet("/", () => "Hello");
+    if (existingItem != null)
+    {
+        existingItem.Value = item.Value;
+    }
+    else
+    {
+        db.StorageItems.Add(item);
+    }
 
-app.MapGet("/add", (int a, int b) => a + b);
+    await db.SaveChangesAsync();
+
+    return Results.Ok(item);
+});
+
+app.MapGet("/storage/{key}", async (string key, AppDbContext db) =>
+{
+    var item = await db.StorageItems
+        .FirstOrDefaultAsync(x => x.Key == key);
+
+    if (item == null)
+    {
+        return Results.NotFound();
+    }
+
+    return Results.Ok(item);
+});
 
 app.Run();
 
-public partial class Program { }
