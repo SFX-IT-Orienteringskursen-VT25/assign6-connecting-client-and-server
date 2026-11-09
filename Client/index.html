@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add and Summarize Numbers</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Add a Number and Summarize Them</h1>
+        <p>Enter a number below. The numbers are stored in a database through the web API.</p>
+
+        <input type="text" id="numberInput" placeholder="Enter an integer">
+        <button id="addButton">Add Number</button>
+        <button id="clearButton">Clear Numbers</button>
+
+        <p id="error" style="color: red;" hidden></p>
+
+        <div class="list">
+            <div id="numberList"></div>
+            =
+            <h3><span id="totalSum">0</span></h3>
+        </div>
+    </div>
+
+    <script src="numbers.js"></script>
+    <script>
+        const numberInput = document.getElementById('numberInput');
+        const addButton = document.getElementById('addButton');
+        const clearButton = document.getElementById('clearButton');
+        const numberList = document.getElementById('numberList');
+        const totalSum = document.getElementById('totalSum');
+        const errorText = document.getElementById('error');
+
+        function render({ numbers, sum }) {
+            numberList.textContent = numbers.join(' + ');
+            totalSum.textContent = sum;
+        }
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorText.hidden = !message;
+        }
+
+        // Disables the buttons while a request is in flight and shows any server error.
+        async function run(action) {
+            addButton.disabled = clearButton.disabled = true;
+            try {
+                render(await action());
+                showError('');
+            } catch (err) {
+                showError(`${err.message}. Is the server running?`);
+            } finally {
+                addButton.disabled = clearButton.disabled = false;
+            }
+        }
+
+        run(() => manageNumbers());
+
+        async function addNumber() {
+            const number = numberInput.value.trim();
+
+            if (!/^-?\d+$/.test(number)) {
+                alert('Please enter a valid integer.');
+                return;
+            }
+
+            await run(() => manageNumbers(parseInt(number, 10)));
+
+            numberInput.value = '';
+            numberInput.focus();
+        }
+
+        addButton.addEventListener('click', addNumber);
+        numberInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') addNumber();
+        });
+
+        clearButton.addEventListener('click', () => {
+            if (confirm('Clear all numbers?')) run(clearNumbers);
+        });
+    </script>
+</body>
+</html>

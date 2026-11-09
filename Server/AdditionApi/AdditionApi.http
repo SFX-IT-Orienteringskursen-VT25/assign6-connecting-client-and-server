@@ -1,0 +1,16 @@
+@AdditionApi_HostAddress = http://localhost:5262
+
+### Save numbers
+PUT {{AdditionApi_HostAddress}}/storage/numbers
+Content-Type: application/json
+
+{ "value": "[1,2,3]" }
+
+### Get numbers
+GET {{AdditionApi_HostAddress}}/storage/numbers
+Accept: application/json
+
+### Clear numbers
+DELETE {{AdditionApi_HostAddress}}/storage/numbers
+
+###
