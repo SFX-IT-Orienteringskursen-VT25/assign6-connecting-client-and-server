@@ -1,0 +1,13 @@
+@AdditionApi_HostAddress = http://localhost:5262
+
+### setItem
+PUT {{AdditionApi_HostAddress}}/storage/numbers
+Content-Type: application/json
+
+{ "value": "[1,2,3]" }
+
+### getItem
+GET {{AdditionApi_HostAddress}}/storage/numbers
+Accept: application/json
+
+###
