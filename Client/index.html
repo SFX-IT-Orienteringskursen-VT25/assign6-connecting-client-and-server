@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Number Sum</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <h1>Number Sum Calculator</h1>
+
+      <form id="number-form">
+        <label for="number-input">Enter a number</label>
+
+        <input
+          type="number"
+          id="number-input"
+          step="any"
+          required
+          placeholder="Enter a number"
+        />
+
+        <button type="submit">Add Number</button>
+      </form>
+
+      <section>
+        <h2>Total Sum: <span id="total-sum">0</span></h2>
+      </section>
+
+      <section>
+        <h2>Number History</h2>
+        <ul id="number-history"></ul>
+      </section>
+
+      <button type="button" id="clear-button">Clear Numbers</button>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
